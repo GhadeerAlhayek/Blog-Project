@@ -38,3 +38,29 @@ export const getUserById = async (req, res) => {
     });
   }
 };
+//we will use this in the auth,controller it is better
+// export const getUserByEmail = async (req, res) => {
+//   try {
+//     const { email } = req.params;
+//     const user = await UserModel.findByEmail(email);
+
+//     if (!user) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       user,
+//     });
+//   } catch (error) {
+//     console.error("Get user by ID error:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Internal server error",
+//     });
+//   }
+// };
+

@@ -1,5 +1,6 @@
 import express from "express";
 import { getUserById } from "../controller/user.controller.js";
+// import { getUserByEmail } from "../controller/user.controller.js";
 // import { authenticate } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -8,7 +9,7 @@ const router = express.Router();
 // router.use(authenticate);
 
 // router.get("/", getAllUsers);
-// router.get("/by-email", getUserByEmail);
+// router.get("/:email", getUserByEmail);
 router.get("/:id", getUserById);
 // router.post("/", createUser);
 

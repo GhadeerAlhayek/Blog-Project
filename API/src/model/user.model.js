@@ -3,18 +3,6 @@ import db from "../config/db.js";
 import bcrypt from "bcrypt";
 
 class UserModel {
-  // READ by email
-  static async findByEmail(email) {
-    try {
-      const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [
-        email,
-      ]);
-      return rows[0] ?? null;
-    } catch (err) {
-      throw new Error(`Database error: ${err.message}`);
-    }
-  }
-
   // READ by ID (without password)
   static async findById(id) {
     try {
@@ -22,6 +10,17 @@ class UserModel {
         "SELECT id, name, email, role, created_at FROM users WHERE id = ?",
         [id]
       );
+      return rows[0] ?? null;
+    } catch (err) {
+      throw new Error(`Database error: ${err.message}`);
+    }
+  }
+  // READ by email
+  static async findByEmail(email) {
+    try {
+      const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [
+        email,
+      ]);
       return rows[0] ?? null;
     } catch (err) {
       throw new Error(`Database error: ${err.message}`);
