@@ -1,5 +1,10 @@
 import express from "express";
-import { getUserById } from "../controller/user.controller.js";
+import {
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+} from "../controller/user.controller.js";
 // import { getUserByEmail } from "../controller/user.controller.js";
 // import { authenticate } from "../middleware/auth.js";
 
@@ -11,6 +16,8 @@ const router = express.Router();
 // router.get("/", getAllUsers);
 // router.get("/:email", getUserByEmail);
 router.get("/:id", getUserById);
-// router.post("/", createUser);
+router.post("/create", createUser);
+router.put("/:id", updateUser);
+router.delete("/:id", deleteUser);
 
 export default router;

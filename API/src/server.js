@@ -6,6 +6,8 @@ import userRoutes from "./router/user.routes.js"
 // import authenticate from "./middelwares/auth.middleware.js"
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // app.post("/x",(req,res) => {
 //     res.send("hihi")
