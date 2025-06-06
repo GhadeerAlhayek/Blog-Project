@@ -95,18 +95,27 @@ export const resetPassword = async (req, res) => {
     }
     
     // Verify token
-    let decoded;
+   let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("Decoded token:", decoded);
     } catch (err) {
+      console.error("Token verification error:", err);
       return res.status(401).json({
         success: false,
         message: "Invalid or expired token"
       });
     }
+
     
+    // Force convert userId to number
+    const userId = Number(decoded.userId);
+    console.log("User ID for reset:", userId, "Type:", typeof userId);
     
-    const user = await UserModel.findById(decoded.userId);
+    // Get user
+    const user = await UserModel.findById(userId);
+    console.log("User found:", user);
+    
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -114,14 +123,8 @@ export const resetPassword = async (req, res) => {
       });
     }
     
-    // Update password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
-    
-    // Update user password
-    const updatedUser = await UserModel.update(user.id, { 
-      password: hashedPassword 
-    });
+    // Only pass the password to update - don't pass other undefined fields
+    const updatedUser = await UserModel.update(userId, { password: newPassword });
     
     if (!updatedUser) {
       return res.status(500).json({
