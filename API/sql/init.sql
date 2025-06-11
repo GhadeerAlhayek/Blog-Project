@@ -34,3 +34,12 @@ CREATE TABLE IF NOT EXISTS comments (
 
 
 
+
+CREATE TABLE IF NOT EXISTS password_resets (
+  user_id INT NOT NULL,
+  token CHAR(64) NOT NULL UNIQUE,
+  expires_at DATETIME NOT NULL,
+  used BOOLEAN DEFAULT FALSE,
+  PRIMARY KEY(user_id, token),
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
