@@ -30,7 +30,7 @@ class ArticleModel {
   }
 
   // Get all articles (with optional filtering)
-  static async getAll({ published, user_id, limit, offset } = {}) {
+  static async getAll() {
     try {
       let query = `
         SELECT a.id, a.title, a.content, a.image_url, a.user_id, a.published, 
@@ -39,7 +39,7 @@ class ArticleModel {
         JOIN users u ON a.user_id = u.id
       `;
 
-      const [articles] = await db.query(query, queryParams);
+      const [articles] = await db.query(query);
       return articles;
     } catch (err) {
       throw new Error(`Database error: ${err.message}`);
@@ -63,56 +63,23 @@ class ArticleModel {
     }
   }
 
-  // Update article
-  static async update(id, { title, content, image_url, published }) {
+  // Ultra simple update method
+  static async update(id, updateData) {
     try {
-      const articleId = Number(id);
-      let updateFields = [];
-      let queryParams = [];
+      const [result] = await db.query(
+        `UPDATE articles 
+       SET title = ?, content = ?, image_url = ?, published = ?
+       WHERE id = ?`,
+        [
+          updateData.title,
+          updateData.content,
+          updateData.image_url,
+          updateData.published,
+          id,
+        ]
+      );
 
-      // Build dynamic query based on provided fields
-      if (title !== undefined) {
-        updateFields.push("title = ?");
-        queryParams.push(title);
-      }
-
-      if (content !== undefined) {
-        updateFields.push("content = ?");
-        queryParams.push(content);
-      }
-
-      if (image_url !== undefined) {
-        updateFields.push("image_url = ?");
-        queryParams.push(image_url);
-      }
-
-      if (published !== undefined) {
-        updateFields.push("published = ?");
-        queryParams.push(published);
-      }
-
-      // If nothing was provided, there’s nothing to update:
-      if (updateFields.length === 0) {
-        return null;
-      }
-
-      // Add ID to query params as the last parameter
-      queryParams.push(articleId);
-
-      const query = `
-        UPDATE articles 
-        SET ${updateFields.join(", ")} 
-        WHERE id = ?
-      `;
-
-      const [result] = await db.query(query, queryParams);
-
-      if (result.affectedRows === 0) {
-        return null;
-      }
-
-      // Return updated article
-      return await this.findById(articleId);
+      return result.affectedRows > 0 ? await this.findById(id) : null;
     } catch (err) {
       throw new Error(`Database error: ${err.message}`);
     }
@@ -187,11 +154,5 @@ content columns, letting users find articles by relevant keywords.
     }
   }
 }
-
-
-
-
-
-
 
 export default ArticleModel;

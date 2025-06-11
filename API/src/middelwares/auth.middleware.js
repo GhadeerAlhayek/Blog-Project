@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import ArticleModel from "../model/articale.model.js";
 
 dotenv.config();
 
@@ -58,41 +59,44 @@ export const authorize = (roles = []) => {
   };
 };
 
-export const isOwnerOrAdmin = (getResourceOwnerId) => {
-  return async (req, res, next) => {
-    try {
-      // Skip check if user is admin
-      if (req.user.role === 'admin') {
-        return next();
-      }
+/*************************
+ * Check article ownership
+ ************************/
+export const checkArticleOwnership = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
 
-      // Get owner ID from the resource
-      const ownerId = await getResourceOwnerId(req);
-      
-      // Check if user is the owner
-      if (req.user.id !== ownerId) {
-        return res.status(403).json({
-          success: false,
-          message: "You don't have permission to modify this resource"
-        });
-      }
+    const article = await ArticleModel.findById(id);
 
-      next();
-    } catch (error) {
-      console.error("Authorization error:", error);
-      return res.status(500).json({
+    if (!article) {
+      return res.status(404).json({
         success: false,
-        message: "Error checking resource ownership",
-        error: error.message
+        message: "Article not found"
       });
     }
-  };
+
+    if (article.user_id !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "You can only modify your own articles"
+      });
+    }
+
+    req.article = article; // Store article in request for use in next middleware
+    next();
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to verify article ownership"
+    });
+  }
 };
 /*
 Implementing Authentication Middleware
 authenticate - Verifies the user is logged in (has a valid token)
 authorize - Checks if the user has the required role(s)
-isOwnerOrAdmin: For individual resource-level access
+checkArticleOwnership: For individual resource-level access
 
 authorize vs isOwnerOrAdmin :
 
