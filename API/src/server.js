@@ -5,6 +5,7 @@ import cors from "cors";
 import userRoutes from "./router/user.routes.js"
 import authRoutes from "./router/auth.routes.js";
 import articleRoutes from "./router/article.routes.js";
+import commentRoutes from "./router/comment.routes.js";
 import cookieParser from "cookie-parser";
 // import authenticate from "./middelwares/auth.middleware.js"
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use("/api/users",userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/articles", articleRoutes);
+app.use("/api/comments", commentRoutes);
 
 
 const PORT = process.env.PORT || process.env.LOCAL_PORT;

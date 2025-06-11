@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import ArticleModel from "../model/articale.model.js";
+import CommentModel from "../model/comment.model.js";
 
 dotenv.config();
 
@@ -89,6 +90,40 @@ export const checkArticleOwnership = async (req, res, next) => {
     res.status(500).json({
       success: false,
       message: "Failed to verify article ownership"
+    });
+  }
+};
+
+
+/*************************
+ * Check comment ownership
+ ************************/
+export const checkCommentOwnership = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const comment = await CommentModel.findById(id);
+
+    if (!comment) {
+      return res.status(404).json({
+        success: false,
+        message: "Comment not found"
+      });
+    }
+
+    if (comment.user_id !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "You can only modify your own comments"
+      });
+    }
+
+    next();
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to verify comment ownership"
     });
   }
 };
