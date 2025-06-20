@@ -1,0 +1,384 @@
+.article-page {
+  min-height: 100vh;
+  position: relative;
+  z-index: 100;
+}
+
+.article-container {
+  min-height: 100vh;
+  padding: $spacing-xl $spacing-md;
+  @include flex-center;
+  position: relative;
+  z-index: 101;
+
+  @include mobile {
+    padding: $spacing-lg $spacing-sm;
+  }
+}
+
+.article-main-card {
+  background: $background-black;
+  border: 2px solid $primary-color;
+  border-radius: $border-radius-lg;
+  @include neon-glow($primary-color, 30px);
+  max-width: 900px;
+  width: 100%;
+  position: relative;
+  z-index: 102;
+  overflow: hidden;
+
+  @include mobile {
+    max-width: 100%;
+    margin: 0;
+  }
+}
+
+// Header Card
+.article-header-card {
+  background: $background-black;
+  padding: $spacing-xl;
+  border-bottom: 2px solid $primary-color;
+
+  @include mobile {
+    padding: $spacing-lg;
+  }
+}
+
+.article-title {
+  font-size: 2.5rem;
+  margin-bottom: $spacing-lg;
+  color: $primary-color;
+  @include text-glow($primary-color);
+  @include hacker-font;
+  line-height: 1.2;
+  text-align: center;
+
+  &::before {
+    content: ">>> ";
+    color: $secondary-color;
+  }
+
+  &::after {
+    content: " <<<";
+    color: $secondary-color;
+  }
+
+  @include mobile {
+    font-size: 1.8rem;
+  }
+}
+
+.article-meta-card {
+  background: rgba($dark-green, 0.3);
+  border: 1px solid $dark-green;
+  border-radius: $border-radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  @include flex-between;
+
+  @include mobile {
+    flex-direction: column;
+    gap: $spacing-md;
+    align-items: flex-start;
+  }
+}
+
+.article-author {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+
+  .author-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid $primary-color;
+    @include neon-glow($primary-color, 10px);
+  }
+
+  .author-info {
+    @include flex-column;
+
+    .author-name {
+      @include hacker-font;
+      color: $primary-color;
+      font-size: 1.1rem;
+      @include text-glow($primary-color);
+
+      &::before {
+        content: "AUTHOR: ";
+        color: $secondary-color;
+        font-size: 0.8rem;
+      }
+    }
+
+    .author-bio {
+      color: $text-white;
+      font-size: 0.9rem;
+      @include hacker-font;
+    }
+  }
+}
+
+.article-details {
+  @include flex-column;
+  align-items: flex-end;
+  gap: $spacing-xs;
+
+  @include mobile {
+    align-items: flex-start;
+  }
+
+  .publish-date {
+    @include hacker-font;
+    color: $secondary-color;
+    font-size: 0.9rem;
+
+    &::before {
+      content: "DATE: ";
+      color: $accent-color;
+    }
+  }
+
+  .read-time {
+    @include hacker-font;
+    color: $text-white;
+    font-size: 0.8rem;
+
+    &::before {
+      content: "TIME: ";
+      color: $primary-color;
+    }
+  }
+}
+
+.tags-card {
+  background: rgba($primary-color, 0.1);
+  border: 1px solid $primary-color;
+  border-radius: $border-radius-md;
+  padding: $spacing-md;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+
+  .article-tag {
+    background: $background-black;
+    border: 1px solid $secondary-color;
+    border-radius: $border-radius-sm;
+    padding: $spacing-xs $spacing-sm;
+    @include hacker-font;
+    font-size: 0.8rem;
+    color: $secondary-color;
+    transition: $transition-normal;
+
+    &::before {
+      content: "#";
+      color: $primary-color;
+    }
+
+    &:hover {
+      background: rgba($secondary-color, 0.2);
+      @include neon-glow($secondary-color, 5px);
+    }
+  }
+}
+
+// Content Cards
+.article-content-wrapper {
+  padding: $spacing-lg;
+  @include flex-column;
+  gap: $spacing-lg;
+
+  @include mobile {
+    padding: $spacing-md;
+  }
+}
+
+.content-card {
+  background: $background-black;
+  border: 1px solid $dark-green;
+  border-radius: $border-radius-md;
+  padding: $spacing-lg;
+  transition: $transition-normal;
+
+  &:hover {
+    border-color: $primary-color;
+    @include neon-glow($primary-color, 10px);
+  }
+
+  &--image {
+    text-align: center;
+    border-color: $secondary-color;
+
+    &:hover {
+      border-color: $secondary-color;
+      @include neon-glow($secondary-color, 15px);
+    }
+  }
+
+  .article-paragraph {
+    color: $text-white;
+    line-height: 1.8;
+    margin: 0;
+    font-size: 1.1rem;
+    @include hacker-font;
+
+    &::first-letter {
+      font-size: 1.5em;
+      color: $primary-color;
+      @include text-glow($primary-color);
+      float: left;
+      margin-right: 4px;
+      margin-top: 4px;
+    }
+  }
+
+  .article-image-container {
+    .article-image {
+      width: 100%;
+      height: auto;
+      border: 2px solid $secondary-color;
+      border-radius: $border-radius-sm;
+      @include neon-glow($secondary-color, 15px);
+      transition: $transition-normal;
+
+      &:hover {
+        @include neon-glow($primary-color, 25px);
+        transform: scale(1.02);
+      }
+    }
+
+    .article-image-caption {
+      margin-top: $spacing-md;
+      color: $text-white;
+      font-style: italic;
+      @include hacker-font;
+      font-size: 0.9rem;
+
+      &::before {
+        content: "[IMG] ";
+        color: $accent-color;
+      }
+    }
+  }
+}
+
+// Footer Card
+.article-footer-card {
+  background: $background-black;
+  padding: $spacing-xl;
+  border-top: 2px solid $primary-color;
+
+  @include mobile {
+    padding: $spacing-lg;
+  }
+}
+
+.article-actions {
+  display: flex;
+  justify-content: center;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-lg;
+
+  @include mobile {
+    gap: $spacing-md;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    background: $background-black;
+    border: 2px solid $primary-color;
+    border-radius: $border-radius-sm;
+    padding: $spacing-md $spacing-lg;
+    @include hacker-font;
+    color: $primary-color;
+    cursor: pointer;
+    transition: $transition-normal;
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+
+    .action-icon {
+      font-size: 1.2rem;
+    }
+
+    .action-text {
+      font-size: 0.9rem;
+    }
+
+    &:hover {
+      @include neon-glow($primary-color, 15px);
+      transform: translateY(-2px);
+      background: rgba($primary-color, 0.1);
+    }
+
+    &--like:hover {
+      color: $error-red;
+      border-color: $error-red;
+      @include neon-glow($error-red, 15px);
+    }
+
+    &--share:hover {
+      color: $accent-color;
+      border-color: $accent-color;
+      @include neon-glow($accent-color, 15px);
+    }
+
+    &--bookmark:hover {
+      color: $secondary-color;
+      border-color: $secondary-color;
+      @include neon-glow($secondary-color, 15px);
+    }
+  }
+}
+
+.article-nav {
+  text-align: center;
+
+  .btn-link {
+    @include hacker-font;
+    color: $primary-color;
+    text-decoration: none;
+    transition: $transition-normal;
+    padding: $spacing-md $spacing-lg;
+    border: 2px solid $primary-color;
+    border-radius: $border-radius-sm;
+    display: inline-block;
+    background: $background-black;
+
+    &::before {
+      content: "<<< ";
+      color: $secondary-color;
+    }
+
+    &::after {
+      content: " >>>";
+      color: $secondary-color;
+    }
+
+    &:hover {
+      @include text-glow($primary-color);
+      @include neon-glow($primary-color, 15px);
+      background: rgba($primary-color, 0.1);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Responsive adjustments
+@include tablet {
+  .article-title {
+    font-size: 2rem;
+  }
+
+  .article-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .action-btn {
+    width: 100%;
+    max-width: 200px;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,30 @@
+// SCSS Variables
+
+// Colors
+$neon-green: #00ff00;
+$dark-green: #0a4d0a;
+$error-red: #ff073a;
+$background-black: rgba(0, 0, 0, 0.95);
+$card-black: rgba(0, 0, 0, 0.85);
+$text-white: #ffffff;
+
+// Alias colors for consistency
+$primary-color: $neon-green;
+$secondary-color: #00ccff;
+$accent-color: #ff6b35;
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+
+// Border radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+
+// Transitions
+$transition-speed: 0.3s;
+$transition-normal: all 0.3s ease;

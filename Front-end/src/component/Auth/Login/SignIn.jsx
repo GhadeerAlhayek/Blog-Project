@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { toast } from 'react-hot-toast';
-// Remove this line: import { useNavigate } from 'react-router-dom';
-import "./SignIn.scss";
+import { toast } from "react-hot-toast";
+
 
 const SignIn = ({ onSignIn }) => {
   const [formData, setFormData] = useState({
@@ -9,8 +8,6 @@ const SignIn = ({ onSignIn }) => {
     password: "",
   });
   const [errors, setErrors] = useState({});
-  
-  // Remove this line: const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,20 +52,17 @@ const SignIn = ({ onSignIn }) => {
 
     setErrors({});
     const toastId = toast.loading("Connexion en cours...");
-    
+
     try {
-      const res = await fetch(
-        `http://localhost:3000/api/auth/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password
-          }),
-        }
-      );
+      const res = await fetch(`http://localhost:3000/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
       const data = await res.json();
 
@@ -76,8 +70,8 @@ const SignIn = ({ onSignIn }) => {
 
       // Save token and user
       if (data.data.token) {
-        localStorage.setItem('token', data.data.token);
-        localStorage.setItem('user', JSON.stringify(data.data.user));
+        localStorage.setItem("token", data.data.token);
+        localStorage.setItem("user", JSON.stringify(data.data.user));
       }
 
       toast.success(`Bienvenue ${data.data.user.name}!`, {
@@ -88,16 +82,20 @@ const SignIn = ({ onSignIn }) => {
         },
       });
 
+      // Save token and user
+      if (data.data.token) {
+        localStorage.setItem("token", data.data.token);
+        localStorage.setItem("user", JSON.stringify(data.data.user));
+      }
+
       // Call parent callback with navigation info
       onSignIn?.(data.data);
 
-      // Use window.location for navigation instead of useNavigate
-      const redirectPath = data.data.user.role === "admin" 
-        ? "/admin/dashboard" 
-        : "/user/dashboard";
-      
-      window.location.href = redirectPath;
+      // const redirectPath = data.data.user.role === "admin"
+      //   ? "/admin/dashboard"
+      //   : "/user/dashboard";
 
+      window.location.href = redirectPath;
     } catch (err) {
       toast.error("Échec de la connexion", {
         id: toastId,
@@ -111,7 +109,6 @@ const SignIn = ({ onSignIn }) => {
     }
   };
 
-  // Rest of your component...
   return (
     <div className="signin-container">
       <div className="signin-card">
@@ -159,9 +156,9 @@ const SignIn = ({ onSignIn }) => {
         </form>
 
         <div className="signin-footer">
-          <a href="#forgot">Forgot Password?</a>
+          <a href="/forgot-password">Forgot Password?</a>
           <span>
-            Don't have an account? <a href="#signup">Sign Up</a>
+            Don't have an account? <a href="/signup">Sign Up</a>
           </span>
         </div>
       </div>

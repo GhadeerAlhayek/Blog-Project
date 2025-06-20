@@ -1,27 +1,4 @@
-// SCSS Variables
-$neon-green: #00ff00;
-$dark-green: #0a4d0a;
-$error-red: #ff073a;
-$background-black: rgba(0, 0, 0, 0.95);
-$card-black: rgba(0, 0, 0, 0.85);
-$transition-speed: 0.3s;
-
-// Mixins
-@mixin neon-glow($color: $neon-green, $intensity: 20px) {
-  box-shadow: 0 0 5px $color, 0 0 10px $color, 0 0 $intensity $color;
-}
-
-@mixin hacker-font {
-  font-family: "Courier New", monospace;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-@mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+@use "sass:color";
 
 // Main styles
 .signin-container {
@@ -148,7 +125,11 @@ $transition-speed: 0.3s;
   @include neon-glow($neon-green, 15px);
 
   &:hover:not(:disabled) {
-    background: linear-gradient(45deg, $neon-green, lighten($neon-green, 20%));
+    background: linear-gradient(
+      45deg,
+      $neon-green,
+      color.scale($neon-green, $lightness: 40%)
+    );
     transform: translateY(-2px);
     @include neon-glow($neon-green, 30px);
   }

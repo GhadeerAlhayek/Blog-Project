@@ -38,93 +38,140 @@ This project is actively under development with the following components impleme
   - Security features (password hashing, JWT tokens, input validation)
   - CORS configuration for frontend-backend communication
 
+- ✅ **Frontend Authentication System**
+
+  - Complete SignIn component with validation and error handling
+  - Toast notifications for user feedback (react-hot-toast)
+  - Responsive design with glitch video background
+  - Form validation and loading states
+  - Secure token storage and management
+  - API integration with backend authentication endpoints
+
+- ✅ **User Dashboard Implementation**
+
+  - Complete user dashboard with sidebar navigation
+  - Profile management (view user information)
+  - Articles management interface
+    - View user's articles with metadata
+    - Create new articles with rich form
+    - Real-time article statistics
+  - Comments management (view user's comments)
+  - Secure logout functionality
+  - Responsive design matching SignIn component aesthetics
+  - Multiple tab navigation system
+  - Loading states and error handling
+
 - ✅ **Frontend-Backend Integration**
   - Successfully connected React frontend to Node.js backend
-  - API service layer implemented with native fetch (no axios dependency)
-  - Authentication flow working (login form connected to backend)
-  - Toast notifications for user feedback
-  - Token storage and management
-  - Error handling and validation
+  - API service layer implemented with native fetch
+  - Authentication flow fully working
+  - Protected dashboard access
+  - Token-based authentication with persistence
   - CORS issues resolved
+  - State management for user sessions
+  - Automatic login persistence on page refresh
 
 ### Currently Working On:
 
-- 🔄 **Frontend Development**
-  - User dashboard implementation
-  - Article management interface
-  - Comment system UI
-  - Navigation and routing setup
-  - User role-based access control
+- 🔄 **Enhanced Dashboard Features**
+  - Profile editing functionality
+  - Password change system
+  - Article editing and deletion
+  - Comment management with CRUD operations
+  - Image upload for articles
+  - Rich text editor integration
 
 ### Upcoming:
 
-- 📅 Complete frontend pages (dashboard, article creation, user profile)
-- 📅 Image upload functionality for articles
-- 📅 Search and filtering capabilities
-- 📅 Category and tag system
-- 📅 Admin dashboard
-- 📅 Rich text editor for articles
-- 📅 Article pagination
-- 📅 Like/dislike system
+- 📅 **Public Blog Interface**
+  - Public article viewing page
+  - Article search and filtering
+  - Category and tag system
+  - Comment system for public users
+- 📅 **Admin Dashboard** (for admin role users)
+- 📅 **Advanced Features**
+  - Like/dislike system
+  - Article pagination
+  - User avatars and profiles
+  - Email notifications
+  - Social sharing
+- 📅 **Performance Optimizations**
+  - Image optimization
+  - Lazy loading
+  - Caching strategies
 
 **Started:** May 26, 2025  
-**Last Updated:** June 18, 2025
+**Last Updated:** June 20, 2025
 
-_Note: This project will continue to evolve with new features and improvements._
+_The project now has a fully functional authentication system and user dashboard!_
 
 ## 📌 Project Overview
 
 This project provides a complete blog platform where users can:
 
-- **Authentication**: Register, login, verify email, reset password
+- **Authentication**: Register, login with persistent sessions
+- **User Dashboard**: Comprehensive dashboard for content management
 - **Content Management**: Create, read, update, delete blog articles
 - **Community Features**: Comment on articles, manage own comments
 - **Security**: Protected routes, resource ownership, JWT authentication
-- **Email Integration**: Account verification and password reset emails
-
-It demonstrates a professional full-stack setup with RESTful API design, secure authentication, and proper database relationships.
+- **Modern UI**: Responsive design with video backgrounds and smooth animations
+- **Real-time Feedback**: Toast notifications for all user actions
 
 ## 🛠 Technologies Used
 
 **Frontend:**
 
-- React.js (with Vite)
-- Native Fetch API (no axios)
+- React.js 18+ (with Vite for fast development)
 - React Hot Toast (notifications)
-- React Router (for navigation)
+- SCSS (advanced styling with animations)
+- Native Fetch API (no external HTTP libraries)
+- Modern JavaScript (ES6+)
 
 **Backend:**
 
-- Node.js
-- Express.js
-- MySQL (database)
-- JWT (authentication)
-- bcrypt (password hashing)
-- Nodemailer (email service)
-- CORS (cross-origin requests)
+- Node.js with Express.js
+- MySQL database with proper relationships
+- JWT authentication
+- bcrypt password hashing
+- Nodemailer email service
+- CORS middleware
 
 **Development Tools:**
 
+- Vite (fast build tool)
 - Postman (API testing)
-- MySQL Workbench (database management)
+- MySQL Workbench
 - VS Code with GitHub Copilot
 
 ## 📁 Project Structure
 
 ```
-/client                     --> React frontend (Vite)
+/Front-end                  --> React frontend (Vite)
+  ├── public/
+  │   └── glitch.mov        --> Background video asset
   ├── src/
-  │   ├── components/      --> React components (SignIn, etc.)
-  │   ├── services/        --> API service layer
-  │   └── ...
+  │   ├── component/
+  │   │   └── Auth/
+  │   │       ├── Login/
+  │   │       │   ├── SignIn.jsx
+  │   │       │   └── SignIn.scss
+  │   │       └── User/
+  │   │           ├── UserDashboard.jsx
+  │   │           └── UserDashboard.scss
+  │   ├── App.jsx           --> Main app component with routing
+  │   ├── App.scss          --> Global styles
+  │   ├── main.jsx          --> App entry point
+  │   └── index.css         --> Base styles
+  └── package.json          --> Frontend dependencies
+
 /API                       --> Express backend
   ├── src/
   │   ├── config/          --> Database and email configuration
-  │   ├── controller/      --> Route controllers (user, article, comment, password)
-  │   ├── middelwares/     --> Authentication and authorization middleware
-  │   ├── model/           --> Database models (User, Article, Comment)
+  │   ├── controller/      --> Route controllers
+  │   ├── middelwares/     --> Authentication middleware
+  │   ├── model/           --> Database models
   │   ├── router/          --> API routes
-  │   └── utils/           --> Utility functions (email service)
+  │   └── utils/           --> Utility functions
   ├── .env                 --> Environment variables
   └── server.js           --> Main server file
 ```
@@ -133,7 +180,7 @@ It demonstrates a professional full-stack setup with RESTful API design, secure 
 
 **Users Table:**
 
-- id, name, email, password, email_verified, verification_token, role, created_at, updated_at
+- id, name, email, password, role, created_at, updated_at
 
 **Articles Table:**
 
@@ -145,30 +192,30 @@ It demonstrates a professional full-stack setup with RESTful API design, secure 
 
 ## 🔌 API Endpoints (All Working)
 
-### Authentication
+### Authentication ✅
 
 - `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login ✅ Connected to frontend
-- `POST /api/auth/logout` - User logout
+- `POST /api/auth/login` - User login (Connected to frontend)
+- `POST /api/auth/logout` - User logout (Connected to dashboard)
 - `GET /api/auth/verify-email/:token` - Email verification
 - `POST /api/auth/resend-verification` - Resend verification email
 - `POST /api/auth/password/forgot` - Request password reset
 - `POST /api/auth/password/reset` - Reset password
 
-### Articles
+### Articles ✅
 
 - `GET /api/articles` - Get all articles (public)
 - `GET /api/articles/:id` - Get single article (public)
-- `POST /api/articles` - Create article (authenticated)
-- `GET /api/articles/user/my-articles` - Get user's articles (authenticated)
+- `POST /api/articles` - Create article (Connected to dashboard)
+- `GET /api/articles/user/my-articles` - Get user's articles (Connected to dashboard)
 - `PUT /api/articles/:id` - Update article (owner only)
 - `DELETE /api/articles/:id` - Delete article (owner only)
 
-### Comments
+### Comments ✅
 
 - `GET /api/comments/article/:articleId` - Get article comments (public)
 - `POST /api/comments` - Create comment (authenticated)
-- `GET /api/comments/my-comments` - Get user's comments (authenticated)
+- `GET /api/comments/my-comments` - Get user's comments (Connected to dashboard)
 - `PUT /api/comments/:id` - Update comment (owner only)
 - `DELETE /api/comments/:id` - Delete comment (owner only)
 
@@ -176,7 +223,7 @@ It demonstrates a professional full-stack setup with RESTful API design, secure 
 
 ### Prerequisites
 
-- Node.js installed
+- Node.js 18+ installed
 - MySQL database setup
 - Gmail account for email service (with app password)
 
@@ -199,32 +246,87 @@ It demonstrates a professional full-stack setup with RESTful API design, secure 
 
 ### Frontend Setup
 
-1. Navigate to client directory: `cd client`
+1. Navigate to frontend directory: `cd Front-end`
 2. Install dependencies: `npm install`
-3. Install required packages:
+3. Install required packages (if not already installed):
    ```bash
-   npm install react-hot-toast react-router-dom
+   npm install react-hot-toast
    ```
-4. Start development server: `npm run dev` (runs on http://localhost:5174)
+4. Add `glitch.mov` video file to the `public` folder
+5. Start development server: `npm run dev` (runs on http://localhost:5174)
 
 ## 🔗 Current Integration Status
 
 - ✅ **Backend API**: Fully functional and tested with Postman
-- ✅ **Frontend-Backend Connection**: Successfully established
-- ✅ **Authentication**: Login form connected and working
-- ✅ **CORS Configuration**: Properly configured for cross-origin requests
-- ✅ **Error Handling**: Comprehensive error handling on both ends
-- ✅ **Token Management**: JWT tokens properly stored and managed
+- ✅ **Authentication Flow**: Complete login/logout system working
+- ✅ **User Dashboard**: Fully implemented with all core features
+- ✅ **Article Management**: Create and view articles working
+- ✅ **Comment System**: View user comments implemented
+- ✅ **State Management**: User sessions persist across page refreshes
+- ✅ **Error Handling**: Comprehensive error handling with user feedback
+- ✅ **Responsive Design**: Works on desktop and mobile devices
+- ✅ **Security**: Protected routes and token management
 
-## 🎯 Current Focus
+## 🎯 Current Features Showcase
 
-The backend is complete and robust. The main focus now is on building out the frontend user interface to create a full-featured blog application. The foundation is solid with secure authentication, complete CRUD operations, and proper API architecture.
+### Authentication System
+
+- **Secure Login**: Email/password validation with error handling
+- **Persistent Sessions**: Users stay logged in across browser refreshes
+- **Toast Notifications**: Real-time feedback for all actions
+- **Loading States**: Professional loading indicators during API calls
+
+### User Dashboard
+
+- **Profile Overview**: Display user information (name, email, role, join date)
+- **Articles Management**:
+  - View all user's articles with creation dates
+  - Create new articles with title, content, and optional images
+  - Real-time article count display
+- **Comments Management**: View all user's comments with timestamps
+- **Navigation**: Smooth tab-based navigation with active states
+- **Logout**: Secure logout with cleanup
+
+### Design Features
+
+- **Video Background**: Immersive glitch video background
+- **Modern UI**: Dark theme with glassmorphism effects
+- **Responsive Layout**: Sidebar navigation that adapts to mobile
+- **Smooth Animations**: Hover effects and transitions
+- **Visual Feedback**: Color-coded buttons and status indicators
 
 ## 📝 Recent Achievements
 
+- **June 20, 2025**: Completed full user dashboard implementation
+- **June 20, 2025**: Fixed all React component and import issues
+- **June 20, 2025**: Implemented article creation and management
+- **June 20, 2025**: Added comprehensive user profile display
+- **June 20, 2025**: Integrated toast notification system
 - **June 18, 2025**: Successfully connected React frontend to Node.js backend
-- **June 18, 2025**: Implemented working login form with toast notifications
+- **June 18, 2025**: Implemented working login form with validation
 - **June 18, 2025**: Resolved all CORS configuration issues
-- **June 18, 2025**: Established proper error handling and token management
 
-The project demonstrates professional full-stack development practices and is ready for continued frontend development! 🚀
+## 🔐 Security Features
+
+- **JWT Token Authentication**: Secure token-based authentication
+- **Protected Routes**: Dashboard only accessible to authenticated users
+- **Input Validation**: Frontend and backend validation
+- **Password Hashing**: Secure password storage with bcrypt
+- **CORS Protection**: Proper cross-origin request handling
+- **Resource Ownership**: Users can only access/modify their own content
+
+## 🎨 Design Philosophy
+
+The application follows a modern, dark-themed design with:
+
+- **Glassmorphism effects** for depth and elegance
+- **Consistent color scheme** with purple gradients and dark backgrounds
+- **Responsive layout** that works on all devices
+- **Smooth animations** for enhanced user experience
+- **Visual feedback** for all user interactions
+
+## 🚀 Next Development Phase
+
+The foundation is solid with a complete authentication system and functional user dashboard. The next focus will be on enhancing the dashboard features and building the public-facing blog interface for non-authenticated users to read articles and interact with content.
+
+**The project demonstrates professional full-stack development practices and is ready for advanced feature development!** 🎉
