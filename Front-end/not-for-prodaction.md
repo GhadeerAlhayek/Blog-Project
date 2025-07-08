@@ -1,1 +1,0 @@
-App.jsx : line 7 , 8 and all the comments

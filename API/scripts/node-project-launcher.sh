@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 # ┌─────────────────────────────────────────────────────────────────────────────┐
-# │  UNIX / macOS:                                                             │
-# │    1. chmod +x node-project-launcher.sh   # (only once)                   │
-# │    2. ./node-project-launcher.sh                                           │
+# │  UNIX / macOS:                                                              │
+# │    1. chmod +x node-project-launcher.sh   # (only once)                     │
+# │    2. ./node-project-launcher.sh                                            │
 # │                                                                             │
-# │  Windows (Git Bash, WSL, Cygwin, etc.):                                    │
-# │    bash node-project-launcher.sh      # no chmod step; runs under bash     │
+# │  Windows (Git Bash, WSL, Cygwin, etc.):                                     │
+# │    bash node-project-launcher.sh      # no chmod step; runs under bash      │
 # └─────────────────────────────────────────────────────────────────────────────┘
 
 mkdir -p src/router src/config src/controller src/middlewares src/model && \
