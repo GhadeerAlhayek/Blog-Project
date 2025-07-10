@@ -1,106 +1,149 @@
-const API_BASE_URL = 'http://localhost:3000/api';
+import axios from "axios";
 
-class ApiService {
-  // Get auth token from localStorage
-  getAuthToken() {
-    return localStorage.getItem('token');
+// Create axios instance with base configuration
+const api = axios.create({
+  baseURL: "http://localhost:3000/api",
+  timeout: 10000,
+  withCredentials: true, // Include cookies in requests
+});
+
+// Request interceptor to add auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
+);
 
-  // Create headers with auth token
-  getHeaders() {
-    const token = this.getAuthToken();
-    return {
-      'Content-Type': 'application/json',
-      ...(token && { 'Authorization': `Bearer ${token}` })
-    };
-  }
+// Response interceptor to handle errors
+// Response interceptor to handle errors
+// Response interceptor to handle your API response structure
+api.interceptors.response.use(
+  (response) => {
+    // Handle your API response structure: { success, message, data }
+    if (response.data && response.data.success && response.data.data) {
+      return response.data.data; // Return the nested data object
+    }
 
-  // Generic API request method
-  async request(endpoint, options = {}) {
-    const url = `${API_BASE_URL}${endpoint}`;
-    
-    const config = {
-      headers: this.getHeaders(),
-      credentials: 'include',
-      ...options
-    };
+    // For other responses, return as-is
+    return response.data;
+  },
+  (error) => {
+    if (error.response) {
+      const message = error.response.data?.message || "Server error occurred";
 
-    try {
-      const response = await fetch(url, config);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'API request failed');
+      if (error.response.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.reload();
       }
 
-      return data;
-    } catch (error) {
-      console.error('API Error:', error);
-      throw error;
+      return Promise.reject(new Error(message));
+    } else if (error.request) {
+      return Promise.reject(
+        new Error("Network error. Please check your connection.")
+      );
+    } else {
+      return Promise.reject(new Error("An unexpected error occurred."));
     }
   }
+);
 
+// API service methods - Updated to match your backend endpoints
+const ApiService = {
   // Auth methods
   async login(email, password) {
-    return this.request('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password })
-    });
-  }
+    return api.post("/auth/login", { email, password });
+  },
 
   async register(name, email, password) {
-    return this.request('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ name, email, password })
-    });
-  }
+    return api.post("/auth/register", { name, email, password });
+  },
 
   async logout() {
-    return this.request('/auth/logout', {
-      method: 'POST'
-    });
-  }
+    return api.post("/auth/logout");
+  },
 
-  // Article methods
-  async getArticles() {
-    return this.request('/articles');
-  }
+  async getUserByEmail(email) {
+    return api.get(`/auth/user/${email}`);
+  },
 
-  async getArticle(id) {
-    return this.request(`/articles/${id}`);
-  }
+  async forgotPassword(email) {
+    return api.post("/auth/password/forgot", { email });
+  },
 
-  async createArticle(article) {
-    return this.request('/articles', {
-      method: 'POST',
-      body: JSON.stringify(article)
-    });
-  }
+  async resetPassword(token, password) {
+    return api.post("/auth/password/reset", { token, password });
+  },
 
-  async updateArticle(id, article) {
-    return this.request(`/articles/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(article)
-    });
-  }
+  // User methods
+  async getAllUsers() {
+    return api.get("/users/");
+  },
+
+  async getUserById(id) {
+    return api.get(`/users/${id}`);
+  },
+
+  async updateUser(id, userData) {
+    return api.put(`/users/${id}`, userData);
+  },
+
+  async deleteUser(id) {
+    return api.delete(`/users/${id}`);
+  },
+
+  // Article methods (All require authentication)
+  async createArticle(articleData) {
+    return api.post("/articles/create", articleData);
+  },
+
+  async getAllArticles() {
+    return api.get("/articles/");
+  },
+
+  async getArticleById(id) {
+    return api.get(`/articles/${id}`);
+  },
+
+  async getUserArticles() {
+    return api.get("/articles/user/my-articles");
+  },
+
+  async updateArticle(id, articleData) {
+    return api.put(`/articles/${id}`, articleData);
+  },
 
   async deleteArticle(id) {
-    return this.request(`/articles/${id}`, {
-      method: 'DELETE'
-    });
-  }
+    return api.delete(`/articles/${id}`);
+  },
 
   // Comment methods
-  async getComments(articleId) {
-    return this.request(`/articles/${articleId}/comments`);
-  }
+  async getCommentsByArticle(articleId) {
+    return api.get(`/comments/article/${articleId}`);
+  },
 
-  async createComment(articleId, content) {
-    return this.request(`/articles/${articleId}/comments`, {
-      method: 'POST',
-      body: JSON.stringify({ content })
-    });
-  }
-}
+  async createComment(content, articleId) {
+    return api.post("/comments/", { content, article_id: articleId });
+  },
 
-export default new ApiService();
+  async getUserComments() {
+    return api.get("/comments/my-comments");
+  },
+
+  async updateComment(id, content) {
+    return api.put(`/comments/${id}`, { content });
+  },
+
+  async deleteComment(id) {
+    return api.delete(`/comments/${id}`);
+  },
+};
+
+export default ApiService;

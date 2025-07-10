@@ -1,38 +1,39 @@
-import React, { useState } from 'react';
-import ApiService from '../../utils/api.js';
+import React, { useState } from "react";
+import { useAuth } from "../../context/AuthContext.jsx";
+import ApiService from "../../utils/api.js";
 
 export default function SignIn({ onClose, onSwitchToSignUp }) {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
-    setError('');
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       const data = await ApiService.login(formData.email, formData.password);
-      
-      // Store token and user data
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      
-      // Close modal and update UI
+
+      if (!data || !data.user || !data.token) {
+        setError("Invalid response from server");
+        return;
+      }
+
+      login(data.user, data.token);
       onClose();
-      window.location.reload();
-      
     } catch (error) {
       setError(error.message);
     } finally {
@@ -44,8 +45,10 @@ export default function SignIn({ onClose, onSwitchToSignUp }) {
     <div className="auth-modal">
       <div className="auth-modal-overlay" onClick={onClose}></div>
       <div className="auth-modal-content">
-        <button className="close-btn" onClick={onClose}>×</button>
-        
+        <button className="close-btn" onClick={onClose}>
+          ×
+        </button>
+
         <div className="auth-header">
           <h2>Welcome Back</h2>
           <p>Sign in to your DOM NEWS account</p>
@@ -53,7 +56,7 @@ export default function SignIn({ onClose, onSwitchToSignUp }) {
 
         <form onSubmit={handleSubmit} className="auth-form">
           {error && <div className="error-message">{error}</div>}
-          
+
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -80,21 +83,17 @@ export default function SignIn({ onClose, onSwitchToSignUp }) {
             />
           </div>
 
-          <button 
-            type="submit" 
-            className="auth-btn"
-            disabled={loading}
-          >
-            {loading ? 'Signing In...' : 'Sign In'}
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
 
         <div className="auth-footer">
           <p>
-            Don't have an account? 
-            <button 
-              type="button" 
-              className="link-btn" 
+            Don't have an account?
+            <button
+              type="button"
+              className="link-btn"
               onClick={onSwitchToSignUp}
             >
               Sign Up

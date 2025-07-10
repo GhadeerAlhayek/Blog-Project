@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ApiService from '../../utils/api.js';
 
 export default function SignUp({ onClose, onSwitchToSignIn }) {
   const [formData, setFormData] = useState({
@@ -32,30 +33,13 @@ export default function SignUp({ onClose, onSwitchToSignIn }) {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password
-        })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccess('Account created successfully! Please check your email to verify your account.');
-        setTimeout(() => {
-          onSwitchToSignIn();
-        }, 2000);
-      } else {
-        setError(data.message || 'Registration failed');
-      }
-    } catch (err) {
-      setError('Network error. Please try again.');
+      await ApiService.register(formData.name, formData.email, formData.password);
+      setSuccess('Account created successfully! Please check your email to verify your account.');
+      setTimeout(() => {
+        onSwitchToSignIn();
+      }, 2000);
+    } catch (error) {
+      setError(error.message);
     } finally {
       setLoading(false);
     }

@@ -1,37 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import SignIn from '../Auth/SignIn.jsx';
-import SignUp from '../Auth/SignUp.jsx';
+import React, { useState } from "react";
+import { useAuth } from "../../context/AuthContext.jsx";
+import SignIn from "../Auth/SignIn.jsx";
+import SignUp from "../Auth/SignUp.jsx";
 
 export default function Header() {
+  const { user, isAuthenticated, loading, logout } = useAuth();
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    // Check if user is logged in
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
-    if (token && userData) {
-      setUser(JSON.parse(userData));
-    }
-  }, []);
 
   const handleSignOut = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
-    window.location.reload();
+    logout();
   };
 
-  const switchToSignUp = () => {
-    setShowSignIn(false);
-    setShowSignUp(true);
-  };
-
-  const switchToSignIn = () => {
-    setShowSignUp(false);
-    setShowSignIn(true);
-  };
+  if (loading) {
+    return (
+      <header className="header">
+        <div className="header-container">
+          <div className="logo">
+            <h1>DOM NEWS</h1>
+          </div>
+          <nav className="navbar">
+            <ul className="nav-list">
+              <li className="nav-item">
+                <span className="nav-link">Loading...</span>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <>
@@ -43,12 +41,16 @@ export default function Header() {
           <nav className="navbar">
             <ul className="nav-list">
               <li className="nav-item">
-                <a href="#home" className="nav-link">Home</a>
+                <a href="#home" className="nav-link">
+                  Home
+                </a>
               </li>
-              {user ? (
+              {isAuthenticated ? (
                 <>
                   <li className="nav-item">
-                    <span className="nav-link">Welcome, {user.name}</span>
+                    <span className="nav-link">
+                      Welcome, {user?.name || "User"}
+                    </span>
                   </li>
                   <li className="nav-item">
                     <button className="nav-link" onClick={handleSignOut}>
@@ -58,13 +60,18 @@ export default function Header() {
                 </>
               ) : (
                 <li className="nav-item">
-                  <button className="nav-link" onClick={() => setShowSignIn(true)}>
+                  <button
+                    className="nav-link"
+                    onClick={() => setShowSignIn(true)}
+                  >
                     Sign In
                   </button>
                 </li>
               )}
               <li className="nav-item">
-                <a href="#about" className="nav-link">About</a>
+                <a href="#about" className="nav-link">
+                  About
+                </a>
               </li>
             </ul>
           </nav>
@@ -72,16 +79,22 @@ export default function Header() {
       </header>
 
       {showSignIn && (
-        <SignIn 
+        <SignIn
           onClose={() => setShowSignIn(false)}
-          onSwitchToSignUp={switchToSignUp}
+          onSwitchToSignUp={() => {
+            setShowSignIn(false);
+            setShowSignUp(true);
+          }}
         />
       )}
 
       {showSignUp && (
-        <SignUp 
+        <SignUp
           onClose={() => setShowSignUp(false)}
-          onSwitchToSignIn={switchToSignIn}
+          onSwitchToSignIn={() => {
+            setShowSignUp(false);
+            setShowSignIn(true);
+          }}
         />
       )}
     </>
