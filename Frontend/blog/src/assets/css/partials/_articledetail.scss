@@ -1,0 +1,688 @@
+.article-detail {
+  margin-top: 100px;
+  margin-bottom: 60px;
+  min-height: calc(100vh - 160px);
+
+  .article-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  // Loading & Error States
+  .loading-state,
+  .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-top: 3px solid rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    .error-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.7;
+    }
+
+    h2 {
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  // Back Navigation
+  .back-nav {
+    margin-bottom: 2rem;
+
+    .back-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  // Article Header - Enhanced with Background
+  .article-header {
+    margin-bottom: 3rem;
+    text-align: center;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+    .article-title {
+      font-size: 2.5rem;
+      color: white;
+      margin-bottom: 2rem;
+      line-height: 1.2;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .article-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: center;
+
+      .author-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+
+        .author {
+          color: rgba(255, 255, 255, 0.9);
+          font-size: 1rem;
+          font-weight: 500;
+        }
+
+        .date {
+          color: rgba(255, 255, 255, 0.6);
+          font-size: 0.9rem;
+        }
+      }
+
+      .reading-info {
+        display: flex;
+        gap: 1.5rem;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+        background: rgba(255, 255, 255, 0.06);
+        padding: 0.75rem 1.5rem;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+
+        .reading-time,
+        .comments-count {
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
+        }
+      }
+    }
+  }
+
+  // Featured Image
+  .article-image {
+    margin-bottom: 3rem;
+    text-align: center;
+
+    img {
+      max-width: 100%;
+      height: auto;
+      max-height: 500px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      object-fit: cover;
+    }
+  }
+
+  // Article Content
+  .article-content {
+    margin-bottom: 4rem;
+
+    .content-body {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 3rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+      p {
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+        text-align: justify;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  // Error Message
+  .error-message {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    color: rgba(255, 107, 107, 0.9);
+
+    .error-icon {
+      font-size: 1.2rem;
+    }
+
+    .error-close {
+      background: none;
+      border: none;
+      color: rgba(255, 107, 107, 0.7);
+      cursor: pointer;
+      font-size: 1.2rem;
+      margin-left: auto;
+      padding: 0.25rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(255, 107, 107, 0.2);
+        color: rgba(255, 107, 107, 0.9);
+      }
+    }
+  }
+
+  // Comments Section - Enhanced
+  .comments-section {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    .comments-header {
+      margin-bottom: 2rem;
+      text-align: center;
+
+      h3 {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.3rem;
+        font-weight: 500;
+      }
+    }
+
+    // Comment Form
+    .comment-form {
+      margin-bottom: 3rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+
+      h4 {
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .comment-input {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.9);
+        font-family: inherit;
+        font-size: 0.95rem;
+        resize: vertical;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.4);
+        }
+
+        &:focus {
+          outline: none;
+          border-color: rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.12);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+
+    .auth-prompt {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin-bottom: 2rem;
+
+      p {
+        color: rgba(255, 255, 255, 0.5);
+        margin: 0;
+        font-size: 0.9rem;
+      }
+    }
+
+    // Comments List
+    .comments-list {
+      .comment {
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.06);
+          border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .comment-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 1rem;
+
+          .comment-author {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+
+            .author-name {
+              color: rgba(255, 255, 255, 0.9);
+              font-weight: 500;
+              font-size: 0.95rem;
+            }
+
+            .comment-date {
+              color: rgba(255, 255, 255, 0.5);
+              font-size: 0.8rem;
+
+              .edited-indicator {
+                font-style: italic;
+                color: rgba(255, 255, 255, 0.4);
+              }
+            }
+          }
+
+          .comment-actions {
+            display: flex;
+            gap: 0.5rem;
+
+            .btn-icon {
+              background: none;
+              border: none;
+              color: rgba(255, 255, 255, 0.6);
+              cursor: pointer;
+              padding: 0.5rem;
+              border-radius: 6px;
+              transition: all 0.3s ease;
+              font-size: 0.9rem;
+
+              &:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: rgba(255, 255, 255, 0.8);
+              }
+
+              &.btn-danger:hover {
+                background: rgba(255, 107, 107, 0.2);
+                color: rgba(255, 107, 107, 0.9);
+              }
+            }
+          }
+        }
+
+        .comment-content {
+          p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin: 0;
+            font-size: 0.95rem;
+          }
+        }
+      }
+
+      .no-comments {
+        text-align: center;
+        padding: 3rem 1rem;
+
+        .no-comments-icon {
+          font-size: 2.5rem;
+          margin-bottom: 1rem;
+          opacity: 0.5;
+        }
+
+        p {
+          color: rgba(255, 255, 255, 0.5);
+          margin: 0;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  // Buttons
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    &.btn-primary {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+      color: white;
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+        transform: translateY(-2px);
+      }
+    }
+
+    &.btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+
+      &:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+    }
+
+    &.btn-danger {
+      background: rgba(255, 107, 107, 0.2);
+      color: rgba(255, 107, 107, 0.9);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+
+      &:hover:not(:disabled) {
+        background: rgba(255, 107, 107, 0.3);
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  // Modal Styles
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    backdrop-filter: blur(4px);
+
+    .modal {
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+
+      &.comment-modal {
+        max-width: 600px;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+        h3 {
+          color: white;
+          margin: 0;
+          font-size: 1.2rem;
+        }
+
+        .modal-close {
+          background: none;
+          border: none;
+          color: rgba(255, 255, 255, 0.7);
+          cursor: pointer;
+          font-size: 1.5rem;
+          padding: 0.5rem;
+          border-radius: 4px;
+          transition: all 0.3s ease;
+
+          &:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+          }
+        }
+      }
+
+      .modal-body {
+        padding: 1.5rem;
+
+        p {
+          color: rgba(255, 255, 255, 0.8);
+          line-height: 1.6;
+          margin: 0;
+        }
+
+        .comment-input {
+          width: 100%;
+          padding: 1rem;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          font-family: inherit;
+          font-size: 0.95rem;
+          resize: vertical;
+          transition: all 0.3s ease;
+
+          &::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+          }
+
+          &:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+          }
+        }
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 1rem;
+        padding: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  // Responsive Design
+  @media (min-width: 768px) {
+    .article-header {
+      padding: 4rem 3rem;
+
+      .article-title {
+        font-size: 3rem;
+      }
+
+      .article-meta {
+        flex-direction: row;
+        justify-content: center;
+        gap: 3rem;
+
+        .author-info {
+          flex-direction: row;
+          gap: 1rem;
+        }
+      }
+    }
+
+    .article-content .content-body {
+      padding: 3.5rem;
+    }
+
+    .comments-section {
+      padding: 3rem;
+
+      .comment-form {
+        padding: 2.5rem;
+      }
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .article-container {
+      padding: 0 2rem;
+    }
+
+    .article-header {
+      padding: 4.5rem 4rem;
+
+      .article-title {
+        font-size: 3.5rem;
+      }
+    }
+  }
+
+  // Mobile Specific Styles
+  @media (max-width: 768px) {
+    .article-container {
+      padding: 0 1rem;
+    }
+
+    .article-header {
+      padding: 2rem 1.5rem;
+
+      .article-title {
+        font-size: 2rem;
+      }
+
+      .article-meta {
+        gap: 1rem;
+
+        .reading-info {
+          flex-direction: column;
+          gap: 0.5rem;
+          text-align: center;
+        }
+      }
+    }
+
+    .article-content .content-body {
+      padding: 2rem;
+    }
+
+    .comments-section {
+      padding: 1.5rem;
+
+      .comment-form {
+        padding: 1.5rem;
+      }
+
+      .comments-list .comment {
+        padding: 1rem;
+
+        .comment-header {
+          flex-direction: column;
+          gap: 0.75rem;
+          align-items: flex-start;
+
+          .comment-actions {
+            align-self: flex-end;
+          }
+        }
+      }
+    }
+
+    .modal-overlay {
+      padding: 0.5rem;
+
+      .modal {
+        .modal-header {
+          padding: 1rem;
+        }
+
+        .modal-body {
+          padding: 1rem;
+        }
+
+        .modal-actions {
+          padding: 1rem;
+          flex-direction: column;
+
+          .btn {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+}

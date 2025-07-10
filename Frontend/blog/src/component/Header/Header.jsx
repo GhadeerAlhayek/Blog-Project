@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import SignIn from "../Auth/SignIn.jsx";
 import SignUp from "../Auth/SignUp.jsx";
+import { Link } from "react-router-dom";
+
+
 
 export default function Header() {
   const { user, isAuthenticated, loading, logout } = useAuth();
@@ -36,17 +39,24 @@ export default function Header() {
       <header className="header">
         <div className="header-container">
           <div className="logo">
-            <h1>DOM NEWS</h1>
+            <Link to="/" className="logo-link">
+              <h1>DOM NEWS</h1>
+            </Link>
           </div>
           <nav className="navbar">
             <ul className="nav-list">
               <li className="nav-item">
-                <a href="#home" className="nav-link">
+                <Link to="/" className="nav-link">
                   Home
-                </a>
+                </Link>
               </li>
               {isAuthenticated ? (
                 <>
+                  <li className="nav-item">
+                    <Link to="/dashboard" className="nav-link">
+                      📊 Dashboard
+                    </Link>
+                  </li>
                   <li className="nav-item">
                     <span className="nav-link">
                       Welcome, {user?.name || "User"}
@@ -77,7 +87,6 @@ export default function Header() {
           </nav>
         </div>
       </header>
-
       {showSignIn && (
         <SignIn
           onClose={() => setShowSignIn(false)}
@@ -87,7 +96,6 @@ export default function Header() {
           }}
         />
       )}
-
       {showSignUp && (
         <SignUp
           onClose={() => setShowSignUp(false)}

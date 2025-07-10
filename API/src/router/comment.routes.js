@@ -4,31 +4,27 @@ import {
   getCommentsByArticle,
   getMyComments,
   updateComment,
-  deleteComment
+  deleteComment,
 } from "../controller/comment.controller.js";
-import { 
-  authenticate, 
-  checkCommentOwnership 
+import {
+  authenticate,
+  checkCommentOwnership,
 } from "../middelwares/auth.middleware.js";
 
 const router = express.Router();
 
-
 router.get("/article/:articleId", getCommentsByArticle);
 
+router.use(authenticate); // DO NOT MOVE ABOVE THE (router.get("/article/:articleId", getCommentsByArticle);)
+//  OR THE SCREEN WILL GO FIREBALLLLLLLLLLLLLLLLLLLL
 
-router.use(authenticate);
-router.post("/", createComment);                        
-router.get("/my-comments", getMyComments);             
-
+router.post("/", createComment);
+router.get("/my-comments", getMyComments);
 
 router.put("/:id", checkCommentOwnership, updateComment);
 router.delete("/:id", checkCommentOwnership, deleteComment);
 
 export default router;
-
-
-
 
 /**
 testing using postman : 

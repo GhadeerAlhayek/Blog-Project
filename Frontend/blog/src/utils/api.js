@@ -6,14 +6,17 @@ const api = axios.create({
   timeout: 10000,
   withCredentials: true, // Include cookies in requests
 });
-
-// Request interceptor to add auth token
+// Add this BEFORE your response interceptor
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    // Get token from localStorage
+    const token = localStorage.getItem('token');
+    
     if (token) {
+      // Add Bearer token to Authorization header
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
     return config;
   },
   (error) => {
@@ -21,14 +24,32 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors
-// Response interceptor to handle errors
-// Response interceptor to handle your API response structure
+// Your existing response interceptor...
+
+// Request interceptor to add auth token
+// Update your response interceptor in api.js
 api.interceptors.response.use(
   (response) => {
     // Handle your API response structure: { success, message, data }
     if (response.data && response.data.success && response.data.data) {
-      return response.data.data; // Return the nested data object
+      const data = response.data.data;
+      
+      // Handle nested article structure
+      if (data.article) {
+        return data.article; // Return the article object directly
+      }
+      
+      // Handle nested comments structure
+      if (data.comments) {
+        return data.comments; // Return the comments array directly
+      }
+      
+      // Handle nested articles structure (for getAllArticles)
+      if (data.articles) {
+        return data.articles; // Return the articles array directly
+      }
+      
+      return data; // Return the nested data object for other endpoints
     }
 
     // For other responses, return as-is
@@ -105,44 +126,86 @@ const ApiService = {
   },
 
   async getAllArticles() {
-    return api.get("/articles/");
+    try {
+      const response = await api.get("/articles/");
+      // Handle the nested structure specifically for articles
+      return response.articles || response || [];
+    } catch (error) {
+      throw error;
+    }
   },
 
+   // Article methods
   async getArticleById(id) {
-    return api.get(`/articles/${id}`);
+    try {
+      const response = await api.get(`/articles/${id}`);
+      return response;
+    } catch (error) {
+      throw error;
+    }
   },
 
-  async getUserArticles() {
-    return api.get("/articles/user/my-articles");
+  async getMyArticles() {
+    try {
+      const response = await api.get('/articles/user/my-articles');
+      return response;
+    } catch (error) {
+      throw error;
+    }
   },
 
   async updateArticle(id, articleData) {
-    return api.put(`/articles/${id}`, articleData);
+    try {
+      const response = await api.put(`/articles/${id}`, articleData);
+      return response;
+    } catch (error) {
+      throw error;
+    }
   },
 
   async deleteArticle(id) {
-    return api.delete(`/articles/${id}`);
+    try {
+      const response = await api.delete(`/articles/${id}`);
+      return response;
+    } catch (error) {
+      throw error;
+    }
   },
 
-  // Comment methods
-  async getCommentsByArticle(articleId) {
-    return api.get(`/comments/article/${articleId}`);
+ async createComment(commentData) {
+    try {
+      const response = await api.post('/comments', commentData);
+      return response;
+    } catch (error) {
+      throw error;
+    }
   },
 
-  async createComment(content, articleId) {
-    return api.post("/comments/", { content, article_id: articleId });
-  },
-
-  async getUserComments() {
-    return api.get("/comments/my-comments");
-  },
-
-  async updateComment(id, content) {
-    return api.put(`/comments/${id}`, { content });
+  async updateComment(id, commentData) {
+    try {
+      const response = await api.put(`/comments/${id}`, commentData);
+      return response;
+    } catch (error) {
+      throw error;
+    }
   },
 
   async deleteComment(id) {
-    return api.delete(`/comments/${id}`);
+    try {
+      const response = await api.delete(`/comments/${id}`);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getMyComments() {
+    try {
+      const response = await api.get('/comments/my-comments');
+      return response;
+    } catch (error) {
+      throw error;
+    }
   },
 };
 
