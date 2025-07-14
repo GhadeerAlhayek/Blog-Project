@@ -5,6 +5,34 @@ import CommentModel from "../model/comment.model.js";
 
 dotenv.config();
 
+export const checkUserOwnership = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const currentUserId = req.user.id;
+    const currentUserRole = req.user.role;
+
+    // Allow admin to update any user
+    if (currentUserRole === "admin") {
+      return next();
+    }
+
+    // Allow users to update only their own profile
+    if (parseInt(id) === currentUserId) {
+      return next();
+    }
+
+    return res.status(403).json({
+      success: false,
+      message: "You can only update your own profile",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Authorization check failed",
+    });
+  }
+};
+
 export const authenticate = (req, res, next) => {
   try {
     // console.log("Cookies received:", req.cookies);
@@ -73,14 +101,14 @@ export const checkArticleOwnership = async (req, res, next) => {
     if (!article) {
       return res.status(404).json({
         success: false,
-        message: "Article not found"
+        message: "Article not found",
       });
     }
 
     if (article.user_id !== userId) {
       return res.status(403).json({
         success: false,
-        message: "You can only modify your own articles"
+        message: "You can only modify your own articles",
       });
     }
 
@@ -89,11 +117,10 @@ export const checkArticleOwnership = async (req, res, next) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Failed to verify article ownership"
+      message: "Failed to verify article ownership",
     });
   }
 };
-
 
 /*************************
  * Check comment ownership
@@ -108,14 +135,14 @@ export const checkCommentOwnership = async (req, res, next) => {
     if (!comment) {
       return res.status(404).json({
         success: false,
-        message: "Comment not found"
+        message: "Comment not found",
       });
     }
 
     if (comment.user_id !== userId) {
       return res.status(403).json({
         success: false,
-        message: "You can only modify your own comments"
+        message: "You can only modify your own comments",
       });
     }
 
@@ -123,7 +150,7 @@ export const checkCommentOwnership = async (req, res, next) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Failed to verify comment ownership"
+      message: "Failed to verify comment ownership",
     });
   }
 };

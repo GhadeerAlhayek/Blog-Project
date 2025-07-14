@@ -49,8 +49,12 @@
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   // Back Navigation
@@ -259,7 +263,7 @@
       }
 
       .comment-input {
-        width: 100%;
+        width: 95%;
         padding: 1rem;
         border-radius: 8px;
         border: 1px solid rgba(255, 255, 255, 0.15);
@@ -428,11 +432,19 @@
     }
 
     &.btn-primary {
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+      background: linear-gradient(
+        135deg,
+        rgba(102, 126, 234, 0.8),
+        rgba(118, 75, 162, 0.8)
+      );
       color: white;
 
       &:hover:not(:disabled) {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.9),
+          rgba(118, 75, 162, 0.9)
+        );
         transform: translateY(-2px);
       }
     }

@@ -7,7 +7,7 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 import MainContent from "./component/MainContent/MainContent.jsx";
 import ArticleDetail from "./component/ArticleDetail/ArticleDetail.jsx";
 import UserDashboard from "./component/UserDashboard/UserDashboard.jsx";
-
+import CreateArticle from './component/CreateArticle/CreateArticle.jsx';
 
 
 function App() {
@@ -20,6 +20,7 @@ function App() {
           <Route path="/" element={<MainContent />} />
           <Route path="/article/:id" element={<ArticleDetail />} />
           <Route path="/dashboard" element={<UserDashboard />} />
+          <Route path="/create-article" element={<CreateArticle />} />
         </Routes>
         <Footer />
       </BrowserRouter>

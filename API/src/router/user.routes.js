@@ -5,13 +5,15 @@ import {
   deleteUser,
   getAllUsers,
 } from "../controller/user.controller.js";
-// import { authenticate } from "../middleware/auth.js"; {{no, we will do the auth thing inside evry router}}
+import { authenticate, checkUserOwnership } from "../middelwares/auth.middleware.js";
+
 
 const router = express.Router();
 
 router.get("/:id", getUserById);
-router.put("/:id", updateUser);
-router.delete("/:id", deleteUser);
+router.use(authenticate);
 router.get("/", getAllUsers);
+router.put("/:id", checkUserOwnership, updateUser);
+router.delete("/:id", checkUserOwnership, deleteUser);
 
 export default router;

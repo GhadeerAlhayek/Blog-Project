@@ -29,15 +29,14 @@ export default function ArticleDetail() {
   const loadArticle = async () => {
     try {
       const data = await ApiService.getArticleById(id);
-      console.log('📄 Raw article response:', data);
       
       const articleData = data.article || data;
-      console.log('📄 Processed article:', articleData);
+      
       
       setArticle(articleData);
     } catch (error) {
       setError('Failed to load article');
-      console.error('Error loading article:', error);
+      
     } finally {
       setLoading(false);
     }
@@ -46,14 +45,14 @@ export default function ArticleDetail() {
   const loadComments = async () => {
     try {
       const data = await ApiService.getCommentsByArticle(id);
-      console.log('💬 Raw comments response:', data);
+      
       
       const commentsData = data.comments || data || [];
-      console.log('💬 Processed comments:', commentsData);
+      
       
       setComments(Array.isArray(commentsData) ? commentsData : []);
     } catch (error) {
-      console.error('Error loading comments:', error);
+      
       setComments([]);
     }
   };
@@ -75,7 +74,7 @@ export default function ArticleDetail() {
       };
 
       const createdComment = await ApiService.createComment(commentData);
-      console.log('✅ Comment created:', createdComment);
+      
       
       // Add new comment to the list
       const newCommentWithUser = {
@@ -90,7 +89,7 @@ export default function ArticleDetail() {
       
     } catch (error) {
       setError('Failed to post comment: ' + error.message);
-      console.error('Error posting comment:', error);
+      
     } finally {
       setSubmittingComment(false);
     }
@@ -103,7 +102,7 @@ export default function ArticleDetail() {
         content: newContent
       });
       
-      console.log('✅ Comment updated:', updatedComment);
+      
       
       // Update comment in the list
       setComments(comments.map(comment => 
@@ -117,7 +116,7 @@ export default function ArticleDetail() {
       
     } catch (error) {
       setError('Failed to update comment: ' + error.message);
-      console.error('Error updating comment:', error);
+      
     }
   };
 
@@ -125,7 +124,7 @@ export default function ArticleDetail() {
   const handleDeleteComment = async (commentId) => {
     try {
       await ApiService.deleteComment(commentId);
-      console.log('✅ Comment deleted');
+      
       
       // Remove comment from the list
       setComments(comments.filter(comment => comment.id !== commentId));
@@ -134,7 +133,7 @@ export default function ArticleDetail() {
       
     } catch (error) {
       setError('Failed to delete comment: ' + error.message);
-      console.error('Error deleting comment:', error);
+      
     }
   };
 

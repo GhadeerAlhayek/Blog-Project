@@ -4,15 +4,23 @@ import SignIn from "../Auth/SignIn.jsx";
 import SignUp from "../Auth/SignUp.jsx";
 import { Link } from "react-router-dom";
 
-
-
 export default function Header() {
   const { user, isAuthenticated, loading, logout } = useAuth();
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSignOut = () => {
     logout();
+    setIsMenuOpen(false); // Close menu after logout
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   if (loading) {
@@ -43,50 +51,70 @@ export default function Header() {
               <h1>DOM NEWS</h1>
             </Link>
           </div>
-          <nav className="navbar">
+
+          {/* Hamburger Menu Button */}
+          <button 
+            className={`hamburger ${isMenuOpen ? 'active' : ''}`}
+            onClick={toggleMenu}
+            aria-label="Toggle navigation menu"
+          >
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+          </button>
+
+          {/* Navigation Menu */}
+          <nav className={`navbar ${isMenuOpen ? 'active' : ''}`}>
             <ul className="nav-list">
               <li className="nav-item">
-                <Link to="/" className="nav-link">
-                  Home
+                <Link to="/" className="nav-link" onClick={closeMenu}>
+                  🏠 Home
                 </Link>
               </li>
               {isAuthenticated ? (
                 <>
                   <li className="nav-item">
-                    <Link to="/dashboard" className="nav-link">
+                    <Link to="/dashboard" className="nav-link" onClick={closeMenu}>
                       📊 Dashboard
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <span className="nav-link">
-                      Welcome, {user?.name || "User"}
+                    <span className="nav-link user-welcome">
+                      👋 Welcome, {user?.name || "User"}
                     </span>
                   </li>
                   <li className="nav-item">
-                    <button className="nav-link" onClick={handleSignOut}>
-                      Sign Out
+                    <button className="nav-link logout-btn" onClick={handleSignOut}>
+                      🚪 Sign Out
                     </button>
                   </li>
                 </>
               ) : (
                 <li className="nav-item">
                   <button
-                    className="nav-link"
-                    onClick={() => setShowSignIn(true)}
+                    className="nav-link signin-btn"
+                    onClick={() => {
+                      setShowSignIn(true);
+                      closeMenu();
+                    }}
                   >
-                    Sign In
+                    🔐 Sign In
                   </button>
                 </li>
               )}
               <li className="nav-item">
-                <a href="#about" className="nav-link">
-                  About
+                <a href="#about" className="nav-link" onClick={closeMenu}>
+                  📖 About
                 </a>
               </li>
             </ul>
           </nav>
+
+          {/* Menu Overlay */}
+          {isMenuOpen && <div className="menu-overlay" onClick={closeMenu}></div>}
         </div>
       </header>
+
       {showSignIn && (
         <SignIn
           onClose={() => setShowSignIn(false)}

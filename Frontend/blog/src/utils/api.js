@@ -10,13 +10,13 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Get token from localStorage
-    const token = localStorage.getItem('token');
-    
+    const token = localStorage.getItem("token");
+
     if (token) {
       // Add Bearer token to Authorization header
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     return config;
   },
   (error) => {
@@ -33,22 +33,26 @@ api.interceptors.response.use(
     // Handle your API response structure: { success, message, data }
     if (response.data && response.data.success && response.data.data) {
       const data = response.data.data;
-      
+
       // Handle nested article structure
       if (data.article) {
         return data.article; // Return the article object directly
       }
-      
+
       // Handle nested comments structure
       if (data.comments) {
         return data.comments; // Return the comments array directly
       }
-      
+      // Handle single comment structure (singular) ← ADD THIS
+      if (data.comment) {
+        return data.comment; // Return the single comment object
+      }
+
       // Handle nested articles structure (for getAllArticles)
       if (data.articles) {
         return data.articles; // Return the articles array directly
       }
-      
+
       return data; // Return the nested data object for other endpoints
     }
 
@@ -121,8 +125,16 @@ const ApiService = {
   },
 
   // Article methods (All require authentication)
-  async createArticle(articleData) {
-    return api.post("/articles/create", articleData);
+    async createArticle(articleData) {
+    try {
+      console.log('📝 Creating article:', articleData);
+      const response = await api.post('/articles/create', articleData);
+      console.log('✅ Article created response:', response);
+      return response;
+    } catch (error) {
+      console.error('❌ Error creating article:', error);
+      throw error;
+    }
   },
 
   async getAllArticles() {
@@ -135,7 +147,7 @@ const ApiService = {
     }
   },
 
-   // Article methods
+  // Article methods
   async getArticleById(id) {
     try {
       const response = await api.get(`/articles/${id}`);
@@ -147,7 +159,16 @@ const ApiService = {
 
   async getMyArticles() {
     try {
-      const response = await api.get('/articles/user/my-articles');
+      const response = await api.get("/articles/user/my-articles");
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getUserArticles() {
+    try {
+      const response = await api.get("/articles/user/my-articles");
       return response;
     } catch (error) {
       throw error;
@@ -172,9 +193,9 @@ const ApiService = {
     }
   },
 
- async createComment(commentData) {
+  async createComment(commentData) {
     try {
-      const response = await api.post('/comments', commentData);
+      const response = await api.post("/comments", commentData);
       return response;
     } catch (error) {
       throw error;
@@ -201,12 +222,59 @@ const ApiService = {
 
   async getMyComments() {
     try {
-      const response = await api.get('/comments/my-comments');
+      const response = await api.get("/comments/my-comments");
       return response;
     } catch (error) {
       throw error;
     }
   },
+  async getCommentsByArticle(articleId) {
+    try {
+      const response = await api.get(`/comments/article/${articleId}`);
+      return response;
+    } catch (error) {
+      console.error("❌ Error fetching comments:", error);
+      throw error;
+    }
+  },
+  async getCommentsByArticle(articleId) {
+    try {
+      const response = await api.get(`/comments/article/${articleId}`);
+      return response;
+    } catch (error) {
+      console.error("❌ Error fetching comments:", error);
+      throw error;
+    }
+  },
+
+  // Add these missing methods for UserDashboard
+  async updateUserProfile(profileData) {
+    try {
+      const response = await api.put(`/users/${profileData.id}`, profileData);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async changePassword(passwordData) {
+    try {
+      const response = await api.post("/auth/password/change", passwordData);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async updatePreferences(preferences) {
+    try {
+      const response = await api.put("/users/preferences", preferences);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+
 };
 
 export default ApiService;

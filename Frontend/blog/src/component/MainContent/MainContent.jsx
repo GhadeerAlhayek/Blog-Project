@@ -16,25 +16,16 @@ export default function MainContent() {
   const loadArticles = async () => {
     try {
       const data = await ApiService.getAllArticles();
-      console.log("🔍 Raw API response:", data); // See what you're actually getting
 
       if (Array.isArray(data)) {
-        console.log("✅ Got articles array:", data.length, "articles");
         setArticles(data);
       } else if (data.articles) {
-        console.log(
-          "✅ Got nested articles:",
-          data.articles.length,
-          "articles"
-        );
         setArticles(data.articles);
       } else {
-        console.log("❌ Unexpected data structure:", data);
         setArticles([]);
       }
     } catch (error) {
       setError("Failed to load articles");
-      console.error("Error loading articles:", error);
     } finally {
       setLoading(false);
     }
@@ -158,7 +149,6 @@ function ArticleCard({ article }) {
             src={article.image_url}
             alt={article.title}
             onError={handleImageError}
-            onLoad={() => console.log("Image loaded:", article.title)}
           />
         </div>
       )}
