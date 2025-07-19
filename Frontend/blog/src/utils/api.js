@@ -166,14 +166,14 @@ const ApiService = {
     }
   },
 
-  async getUserArticles() {
-    try {
-      const response = await api.get("/articles/user/my-articles");
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  },
+  // async getUserArticles() {
+  //   try {
+  //     const response = await api.get("/articles/user/my-articles");
+  //     return response;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
 
   async updateArticle(id, articleData) {
     try {
@@ -237,15 +237,15 @@ const ApiService = {
       throw error;
     }
   },
-  async getCommentsByArticle(articleId) {
-    try {
-      const response = await api.get(`/comments/article/${articleId}`);
-      return response;
-    } catch (error) {
-      console.error("❌ Error fetching comments:", error);
-      throw error;
-    }
-  },
+  // async getCommentsByArticle(articleId) {
+  //   try {
+  //     const response = await api.get(`/comments/article/${articleId}`);
+  //     return response;
+  //   } catch (error) {
+  //     console.error("❌ Error fetching comments:", error);
+  //     throw error;
+  //   }
+  // },
 
   // Add these missing methods for UserDashboard
   async updateUserProfile(profileData) {

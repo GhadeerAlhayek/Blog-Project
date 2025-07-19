@@ -17,14 +17,14 @@ export default function UserDashboard() {
   // Profile state - only name and email
   const [profileData, setProfileData] = useState({
     name: "",
-    email: ""
+    email: "",
   });
 
   // Password state
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   // Modal states
@@ -35,7 +35,7 @@ export default function UserDashboard() {
   const [editFormData, setEditFormData] = useState({
     title: "",
     content: "",
-    image_url: ""
+    image_url: "",
   });
 
   // Initialize component
@@ -49,7 +49,7 @@ export default function UserDashboard() {
     if (user) {
       setProfileData({
         name: user.name || "",
-        email: user.email || ""
+        email: user.email || "",
       });
     }
 
@@ -58,14 +58,32 @@ export default function UserDashboard() {
   }, [isAuthenticated, navigate, user]);
 
   // Load user articles
+  // Load user articles
   const loadUserArticles = async () => {
     try {
       setLoading(true);
       const response = await ApiService.getMyArticles();
-      setArticles(Array.isArray(response.data?.articles) ? response.data.articles : []);
+
+      // Your backend returns: { success: true, data: { articles: [...] } }
+      // But your API interceptor should extract just the articles array
+      let articlesData = [];
+
+      if (Array.isArray(response)) {
+        // If response is directly an array (after interceptor processing)
+        articlesData = response;
+      } else if (response && response.articles) {
+        // If response has articles property
+        articlesData = response.articles;
+      } else if (response && response.data && response.data.articles) {
+        // If response has nested articles
+        articlesData = response.data.articles;
+      } else {
+        articlesData = [];
+      }
+
+      setArticles(Array.isArray(articlesData) ? articlesData : []);
     } catch (error) {
-      console.error("Error loading articles:", error);
-      setError("Failed to load articles");
+      setError("Failed to load articles: " + error.message);
       setArticles([]);
     } finally {
       setLoading(false);
@@ -86,12 +104,12 @@ export default function UserDashboard() {
   // Profile handlers
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
-    setProfileData(prev => ({ ...prev, [name]: value }));
+    setProfileData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!profileData.name.trim()) {
       showError("Name is required");
       return;
@@ -113,14 +131,14 @@ export default function UserDashboard() {
       const response = await ApiService.updateUserProfile({
         id: user.id,
         name: profileData.name.trim(),
-        email: profileData.email.trim()
+        email: profileData.email.trim(),
       });
 
       if (response.success) {
         updateUser({
           ...user,
           name: response.data.user.name,
-          email: response.data.user.email
+          email: response.data.user.email,
         });
         showSuccess("Profile updated successfully!");
       } else {
@@ -128,7 +146,10 @@ export default function UserDashboard() {
       }
     } catch (error) {
       console.error("Profile update error:", error);
-      showError("Failed to update profile: " + (error.response?.data?.message || error.message));
+      showError(
+        "Failed to update profile: " +
+          (error.response?.data?.message || error.message)
+      );
     } finally {
       setLoading(false);
     }
@@ -137,7 +158,7 @@ export default function UserDashboard() {
   // Password handlers
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
-    setPasswordData(prev => ({ ...prev, [name]: value }));
+    setPasswordData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePasswordSubmit = async (e) => {
@@ -167,14 +188,14 @@ export default function UserDashboard() {
       setLoading(true);
       const response = await ApiService.changePassword({
         currentPassword: passwordData.currentPassword,
-        newPassword: passwordData.newPassword
+        newPassword: passwordData.newPassword,
       });
 
       if (response.success) {
         setPasswordData({
           currentPassword: "",
           newPassword: "",
-          confirmPassword: ""
+          confirmPassword: "",
         });
         showSuccess("Password changed successfully!");
       } else {
@@ -182,7 +203,10 @@ export default function UserDashboard() {
       }
     } catch (error) {
       console.error("Password change error:", error);
-      showError("Failed to change password: " + (error.response?.data?.message || error.message));
+      showError(
+        "Failed to change password: " +
+          (error.response?.data?.message || error.message)
+      );
     } finally {
       setLoading(false);
     }
@@ -194,7 +218,7 @@ export default function UserDashboard() {
     setEditFormData({
       title: article.title,
       content: article.content,
-      image_url: article.image_url || ""
+      image_url: article.image_url || "",
     });
     setEditModalOpen(true);
   };
@@ -205,14 +229,19 @@ export default function UserDashboard() {
 
     try {
       setLoading(true);
-      const response = await ApiService.updateArticle(editingArticle.id, editFormData);
-      
+      const response = await ApiService.updateArticle(
+        editingArticle.id,
+        editFormData
+      );
+
       if (response.success) {
-        setArticles(articles.map(article =>
-          article.id === editingArticle.id 
-            ? { ...article, ...response.data.article }
-            : article
-        ));
+        setArticles(
+          articles.map((article) =>
+            article.id === editingArticle.id
+              ? { ...article, ...response.data.article }
+              : article
+          )
+        );
         setEditModalOpen(false);
         setEditingArticle(null);
         showSuccess("Article updated successfully!");
@@ -221,7 +250,10 @@ export default function UserDashboard() {
       }
     } catch (error) {
       console.error("Update article error:", error);
-      showError("Failed to update article: " + (error.response?.data?.message || error.message));
+      showError(
+        "Failed to update article: " +
+          (error.response?.data?.message || error.message)
+      );
     } finally {
       setLoading(false);
     }
@@ -238,9 +270,11 @@ export default function UserDashboard() {
     try {
       setLoading(true);
       const response = await ApiService.deleteArticle(deletingArticle.id);
-      
+
       if (response.success) {
-        setArticles(articles.filter(article => article.id !== deletingArticle.id));
+        setArticles(
+          articles.filter((article) => article.id !== deletingArticle.id)
+        );
         setDeleteModalOpen(false);
         setDeletingArticle(null);
         showSuccess("Article deleted successfully!");
@@ -249,7 +283,10 @@ export default function UserDashboard() {
       }
     } catch (error) {
       console.error("Delete article error:", error);
-      showError("Failed to delete article: " + (error.response?.data?.message || error.message));
+      showError(
+        "Failed to delete article: " +
+          (error.response?.data?.message || error.message)
+      );
     } finally {
       setLoading(false);
     }
@@ -257,34 +294,39 @@ export default function UserDashboard() {
 
   // Calculate statistics
   const totalArticles = articles.length;
-  const publishedArticles = articles.filter(article => article.published).length;
+  const publishedArticles = articles.filter(
+    (article) => article.published
+  ).length;
   const draftArticles = totalArticles - publishedArticles;
-  const totalComments = articles.reduce((sum, article) => sum + (article.comment_count || 0), 0);
+  const totalComments = articles.reduce(
+    (sum, article) => sum + (article.comment_count || 0),
+    0
+  );
 
   // Render navigation
   const renderNavigation = () => (
     <nav className="dashboard-nav">
-      <button 
-        className={`nav-tab ${activeTab === 'overview' ? 'active' : ''}`}
-        onClick={() => setActiveTab('overview')}
+      <button
+        className={`nav-tab ${activeTab === "overview" ? "active" : ""}`}
+        onClick={() => setActiveTab("overview")}
       >
         📊 Overview
       </button>
-      <button 
-        className={`nav-tab ${activeTab === 'articles' ? 'active' : ''}`}
-        onClick={() => setActiveTab('articles')}
+      <button
+        className={`nav-tab ${activeTab === "articles" ? "active" : ""}`}
+        onClick={() => setActiveTab("articles")}
       >
         📝 My Articles
       </button>
-      <button 
-        className={`nav-tab ${activeTab === 'profile' ? 'active' : ''}`}
-        onClick={() => setActiveTab('profile')}
+      <button
+        className={`nav-tab ${activeTab === "profile" ? "active" : ""}`}
+        onClick={() => setActiveTab("profile")}
       >
         👤 Profile
       </button>
-      <button 
-        className={`nav-tab ${activeTab === 'password' ? 'active' : ''}`}
-        onClick={() => setActiveTab('password')}
+      <button
+        className={`nav-tab ${activeTab === "password" ? "active" : ""}`}
+        onClick={() => setActiveTab("password")}
       >
         🔒 Password
       </button>
@@ -295,7 +337,7 @@ export default function UserDashboard() {
   const renderOverview = () => (
     <div className="dashboard-section">
       <h2>Dashboard Overview</h2>
-      
+
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon">📄</div>
@@ -336,9 +378,9 @@ export default function UserDashboard() {
           <Link to="/create-article" className="btn btn-primary">
             ✏️ Create New Article
           </Link>
-          <button 
+          <button
             className="btn btn-secondary"
-            onClick={() => setActiveTab('articles')}
+            onClick={() => setActiveTab("articles")}
           >
             📝 View All Articles
           </button>
@@ -366,7 +408,10 @@ export default function UserDashboard() {
         <div className="empty-state">
           <div className="empty-icon">📝</div>
           <h3>No articles yet</h3>
-          <p>Start writing your first article to share your thoughts with the world!</p>
+          <p>
+            Start writing your first article to share your thoughts with the
+            world!
+          </p>
           <Link to="/create-article" className="btn btn-primary">
             Create Your First Article
           </Link>
@@ -378,8 +423,12 @@ export default function UserDashboard() {
               <div className="article-header">
                 <h3>{article.title}</h3>
                 <div className="article-status">
-                  <span className={`status-badge ${article.published ? 'published' : 'draft'}`}>
-                    {article.published ? 'Published' : 'Draft'}
+                  <span
+                    className={`status-badge ${
+                      article.published ? "published" : "draft"
+                    }`}
+                  >
+                    {article.published ? "Published" : "Draft"}
                   </span>
                 </div>
               </div>
@@ -387,7 +436,9 @@ export default function UserDashboard() {
               <div className="article-meta">
                 <div className="meta-item">
                   <span className="meta-icon">📅</span>
-                  <span>{new Date(article.created_at).toLocaleDateString()}</span>
+                  <span>
+                    {new Date(article.created_at).toLocaleDateString()}
+                  </span>
                 </div>
                 <div className="meta-item">
                   <span className="meta-icon">💬</span>
@@ -400,17 +451,20 @@ export default function UserDashboard() {
               </div>
 
               <div className="article-actions">
-                <Link to={`/article/${article.id}`} className="btn btn-secondary">
+                <Link
+                  to={`/article/${article.id}`}
+                  className="btn btn-secondary"
+                >
                   👁️ View
                 </Link>
-                <button 
+                <button
                   onClick={() => handleEditClick(article)}
                   className="btn btn-primary"
                   disabled={loading}
                 >
                   ✏️ Edit
                 </button>
-                <button 
+                <button
                   onClick={() => handleDeleteClick(article)}
                   className="btn btn-danger"
                   disabled={loading}
@@ -459,13 +513,14 @@ export default function UserDashboard() {
             disabled={loading}
           />
           <div className="form-hint">
-            Make sure this email is accessible as it's used for account notifications
+            Make sure this email is accessible as it's used for account
+            notifications
           </div>
         </div>
 
         <div className="form-actions">
           <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Updating...' : 'Update Profile'}
+            {loading ? "Updating..." : "Update Profile"}
           </button>
         </div>
       </form>
@@ -528,7 +583,7 @@ export default function UserDashboard() {
 
         <div className="form-actions">
           <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Changing...' : 'Change Password'}
+            {loading ? "Changing..." : "Change Password"}
           </button>
         </div>
       </form>
@@ -541,7 +596,10 @@ export default function UserDashboard() {
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h3>Edit Article</h3>
-          <button onClick={() => setEditModalOpen(false)} className="modal-close">
+          <button
+            onClick={() => setEditModalOpen(false)}
+            className="modal-close"
+          >
             ✕
           </button>
         </div>
@@ -553,7 +611,9 @@ export default function UserDashboard() {
               type="text"
               id="edit-title"
               value={editFormData.title}
-              onChange={(e) => setEditFormData({...editFormData, title: e.target.value})}
+              onChange={(e) =>
+                setEditFormData({ ...editFormData, title: e.target.value })
+              }
               className="form-input"
               required
             />
@@ -565,7 +625,9 @@ export default function UserDashboard() {
               type="url"
               id="edit-image"
               value={editFormData.image_url}
-              onChange={(e) => setEditFormData({...editFormData, image_url: e.target.value})}
+              onChange={(e) =>
+                setEditFormData({ ...editFormData, image_url: e.target.value })
+              }
               className="form-input"
               placeholder="https://example.com/image.jpg"
             />
@@ -576,7 +638,9 @@ export default function UserDashboard() {
             <textarea
               id="edit-content"
               value={editFormData.content}
-              onChange={(e) => setEditFormData({...editFormData, content: e.target.value})}
+              onChange={(e) =>
+                setEditFormData({ ...editFormData, content: e.target.value })
+              }
               className="form-textarea"
               rows="10"
               required
@@ -591,8 +655,12 @@ export default function UserDashboard() {
             >
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Saving...' : 'Save Changes'}
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={loading}
+            >
+              {loading ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>
@@ -606,14 +674,19 @@ export default function UserDashboard() {
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h3>Delete Article</h3>
-          <button onClick={() => setDeleteModalOpen(false)} className="modal-close">
+          <button
+            onClick={() => setDeleteModalOpen(false)}
+            className="modal-close"
+          >
             ✕
           </button>
         </div>
 
         <div className="modal-content">
           <p>Are you sure you want to delete "{deletingArticle?.title}"?</p>
-          <p><strong>This action cannot be undone.</strong></p>
+          <p>
+            <strong>This action cannot be undone.</strong>
+          </p>
         </div>
 
         <div className="modal-actions">
@@ -628,7 +701,7 @@ export default function UserDashboard() {
             className="btn btn-danger"
             disabled={loading}
           >
-            {loading ? 'Deleting...' : 'Delete Article'}
+            {loading ? "Deleting..." : "Delete Article"}
           </button>
         </div>
       </div>
@@ -668,7 +741,9 @@ export default function UserDashboard() {
           <div className="error-message">
             <span className="error-icon">⚠️</span>
             <span>{error}</span>
-            <button onClick={() => setError("")} className="error-close">✕</button>
+            <button onClick={() => setError("")} className="error-close">
+              ✕
+            </button>
           </div>
         )}
 
@@ -676,7 +751,9 @@ export default function UserDashboard() {
           <div className="success-message">
             <span className="success-icon">✅</span>
             <span>{success}</span>
-            <button onClick={() => setSuccess("")} className="success-close">✕</button>
+            <button onClick={() => setSuccess("")} className="success-close">
+              ✕
+            </button>
           </div>
         )}
 
@@ -685,10 +762,10 @@ export default function UserDashboard() {
 
         {/* Content */}
         <div className="dashboard-content">
-          {activeTab === 'overview' && renderOverview()}
-          {activeTab === 'articles' && renderArticles()}
-          {activeTab === 'profile' && renderProfile()}
-          {activeTab === 'password' && renderPassword()}
+          {activeTab === "overview" && renderOverview()}
+          {activeTab === "articles" && renderArticles()}
+          {activeTab === "profile" && renderProfile()}
+          {activeTab === "password" && renderPassword()}
         </div>
 
         {/* Modals */}
