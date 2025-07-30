@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import ApiService from '../../utils/api.js';
+import ImageUpload from '../ImageUpload/ImageUpload.jsx';
+
 
 export default function CreateArticle() {
   const navigate = useNavigate();
@@ -31,6 +33,21 @@ export default function CreateArticle() {
       [name]: type === 'checkbox' ? checked : value
     }));
   };
+
+  const handleImageUploaded = (imageUrl) => {
+    setFormData(prev => ({
+      ...prev,
+      image_url: imageUrl
+    }));
+  };
+
+  const handleImageRemoved = () => {
+    setFormData(prev => ({
+      ...prev,
+      image_url: ''
+    }));
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,8 +117,7 @@ export default function CreateArticle() {
   if (!isAuthenticated) {
     return null;
   }
-
-  return (
+return (
     <main className="create-article">
       <div className="create-article-container">
         
@@ -157,33 +173,14 @@ export default function CreateArticle() {
             </div>
           </div>
 
-          {/* Image URL */}
+          {/* Image Upload */}
           <div className="form-group">
-            <label htmlFor="image_url">Featured Image URL (Optional)</label>
-            <input
-              type="url"
-              id="image_url"
-              name="image_url"
-              value={formData.image_url}
-              onChange={handleInputChange}
-              className="form-input"
-              placeholder="https://example.com/image.jpg"
-              disabled={loading}
+            <label>Featured Image</label>
+            <ImageUpload
+              onImageUploaded={handleImageUploaded}
+              currentImageUrl={formData.image_url}
+              onImageRemoved={handleImageRemoved}
             />
-            <div className="form-hint">
-              Add a URL to an image that represents your article
-            </div>
-            {formData.image_url && (
-              <div className="image-preview">
-                <img 
-                  src={formData.image_url} 
-                  alt="Preview" 
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-              </div>
-            )}
           </div>
 
           {/* Content */}

@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import ArticleModel from "../model/articale.model.js";
 import CommentModel from "../model/comment.model.js";
+import AdminModel from "../model/admin.model.js";
 
 dotenv.config();
 
@@ -49,7 +50,7 @@ export const authenticate = (req, res, next) => {
       }
     }
 
-    //{{{{ ok this was not me who wrot the chicking, i have no idea where does the number 7 come from, dot takeout points please i can explaine}}}}
+    //{{{{ ok this was not me who wrot the chicking, i have no idea where does the number 7 come from, don't takeout points please i can explaine}}}}
 
     if (!token) {
       return res
@@ -69,25 +70,77 @@ export const authenticate = (req, res, next) => {
 };
 
 export const authorize = (roles = []) => {
-  return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        message: "Authentication required",
-      });
-    }
+  return async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: "Authentication required",
+        });
+      }
 
-    if (roles.length && !roles.includes(req.user.role)) {
+      // Check if user role is in allowed roles
+      if (roles.includes(req.user.role)) {
+        // For admin role, also verify in admin table
+        if (req.user.role === "admin") {
+          const isAdmin = await AdminModel.isAdmin(req.user.id);
+          if (isAdmin) {
+            return next();
+          }
+        } else {
+          return next();
+        }
+      }
+
       return res.status(403).json({
         success: false,
-        message: "You don't have permission to access this resource",
+        message: "Insufficient permissions",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Authorization error",
+        error: error.message,
       });
     }
-
-    next();
   };
 };
 
+/**
+ * Check specific admin permission
+ */
+export const requirePermission = (permission) => {
+  return async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: "Authentication required",
+        });
+      }
+
+      const hasPermission = await AdminModel.hasPermission(
+        req.user.id,
+        permission
+      );
+
+      if (!hasPermission) {
+        return res.status(403).json({
+          success: false,
+          message: `Permission '${permission}' required`,
+        });
+      }
+
+      next();
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Permission check failed",
+        error: error.message,
+      });
+    }
+  };
+};
 /*************************
  * Check article ownership
  ************************/

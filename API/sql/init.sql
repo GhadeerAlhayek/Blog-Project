@@ -43,3 +43,18 @@ CREATE TABLE IF NOT EXISTS password_resets (
   PRIMARY KEY(user_id, token),
   FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    granted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    -- list out each possible admin action here:
+    permissions SET(
+        'read_all_articles',
+        'create_articles',
+        'update_any_article',
+        'delete_any_article'
+    ) NOT NULL
+    DEFAULT 'read_all_articles,create_articles,update_any_article,delete_any_article',
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

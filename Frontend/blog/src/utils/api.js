@@ -193,6 +193,33 @@ const ApiService = {
     }
   },
 
+   // Upload methods
+  async uploadImage(file) {
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await api.post('/upload/image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async deleteImage(filename) {
+    try {
+      const response = await api.delete(`/upload/image/${filename}`);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   async createComment(commentData) {
     try {
       const response = await api.post("/comments", commentData);
