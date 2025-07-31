@@ -8,6 +8,7 @@ import MainContent from "./component/MainContent/MainContent.jsx";
 import ArticleDetail from "./component/ArticleDetail/ArticleDetail.jsx";
 import UserDashboard from "./component/UserDashboard/UserDashboard.jsx";
 import CreateArticle from './component/CreateArticle/CreateArticle.jsx';
+import AdminDashboard from './component/AdminDashboard/AdminDashboard.jsx';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/article/:id" element={<ArticleDetail />} />
           <Route path="/dashboard" element={<UserDashboard />} />
           <Route path="/create-article" element={<CreateArticle />} />
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
         <Footer />
       </BrowserRouter>

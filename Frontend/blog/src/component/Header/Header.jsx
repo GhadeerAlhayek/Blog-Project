@@ -53,8 +53,8 @@ export default function Header() {
           </div>
 
           {/* Hamburger Menu Button */}
-          <button 
-            className={`hamburger ${isMenuOpen ? 'active' : ''}`}
+          <button
+            className={`hamburger ${isMenuOpen ? "active" : ""}`}
             onClick={toggleMenu}
             aria-label="Toggle navigation menu"
           >
@@ -64,7 +64,7 @@ export default function Header() {
           </button>
 
           {/* Navigation Menu */}
-          <nav className={`navbar ${isMenuOpen ? 'active' : ''}`}>
+          <nav className={`navbar ${isMenuOpen ? "active" : ""}`}>
             <ul className="nav-list">
               <li className="nav-item">
                 <Link to="/" className="nav-link" onClick={closeMenu}>
@@ -74,17 +74,36 @@ export default function Header() {
               {isAuthenticated ? (
                 <>
                   <li className="nav-item">
-                    <Link to="/dashboard" className="nav-link" onClick={closeMenu}>
+                    <Link
+                      to="/dashboard"
+                      className="nav-link"
+                      onClick={closeMenu}
+                    >
                       📊 Dashboard
                     </Link>
                   </li>
+                  {/* Add Admin Panel link for admin users */}
+                  {user?.role === "admin" && (
+                    <li className="nav-item">
+                      <Link
+                        to="/admin"
+                        className="nav-link"
+                        onClick={closeMenu}
+                      >
+                        ⚙️ Admin Panel
+                      </Link>
+                    </li>
+                  )}
                   <li className="nav-item">
                     <span className="nav-link user-welcome">
                       👋 Welcome, {user?.name || "User"}
                     </span>
                   </li>
                   <li className="nav-item">
-                    <button className="nav-link logout-btn" onClick={handleSignOut}>
+                    <button
+                      className="nav-link logout-btn"
+                      onClick={handleSignOut}
+                    >
                       🚪 Sign Out
                     </button>
                   </li>
@@ -111,7 +130,9 @@ export default function Header() {
           </nav>
 
           {/* Menu Overlay */}
-          {isMenuOpen && <div className="menu-overlay" onClick={closeMenu}></div>}
+          {isMenuOpen && (
+            <div className="menu-overlay" onClick={closeMenu}></div>
+          )}
         </div>
       </header>
 
