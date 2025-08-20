@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 export default function MainContent() {
   const { user, isAuthenticated } = useAuth();
+
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -64,12 +65,12 @@ export default function MainContent() {
             <div className="dashboard-header">
               <h2>Welcome back, {user.name}!</h2>
               <div className="dashboard-actions">
-                <button className="btn btn-primary">
+                <Link to="/create-article" className="btn btn-primary">
                   <span>📝</span> Create New Article
-                </button>
-                <button className="btn btn-secondary">
+                </Link>
+                <Link to="/dashboard" className="btn btn-secondary">
                   <span>📄</span> My Articles
-                </button>
+                </Link>
               </div>
             </div>
           </section>
@@ -79,10 +80,6 @@ export default function MainContent() {
         <section className="articles-section">
           <div className="section-header">
             <h2>Latest Articles</h2>
-            <div className="articles-count">
-              {articles.length} article{articles.length !== 1 ? "s" : ""}{" "}
-              available
-            </div>
           </div>
 
           {error && (

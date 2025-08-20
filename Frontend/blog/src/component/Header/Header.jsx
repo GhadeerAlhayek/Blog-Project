@@ -122,7 +122,7 @@ export default function Header() {
                 </li>
               )}
               <li className="nav-item">
-                <a href="#about" className="nav-link" onClick={closeMenu}>
+                <a href="/about" className="nav-link" onClick={closeMenu}>
                   📖 About
                 </a>
               </li>

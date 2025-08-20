@@ -9,6 +9,7 @@ import ArticleDetail from "./component/ArticleDetail/ArticleDetail.jsx";
 import UserDashboard from "./component/UserDashboard/UserDashboard.jsx";
 import CreateArticle from './component/CreateArticle/CreateArticle.jsx';
 import AdminDashboard from './component/AdminDashboard/AdminDashboard.jsx';
+import About from './component/About/About.jsx';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/dashboard" element={<UserDashboard />} />
           <Route path="/create-article" element={<CreateArticle />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/about" element={<About />} />
         </Routes>
         <Footer />
       </BrowserRouter>
